@@ -9,6 +9,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js for data visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- SheetJS (xlsx) for Excel generation -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -112,7 +114,12 @@
                 
                 <!-- Amortization Table -->
                 <div id="table-container" class="mt-8">
-                    <h3 class="text-xl font-semibold text-gray-700 mb-4 text-center">Amortization Schedule</h3>
+                     <div class="flex flex-col sm:flex-row justify-center items-center mb-4 gap-4">
+                        <h3 class="text-xl font-semibold text-gray-700">Amortization Schedule</h3>
+                        <button id="download-excel" class="hidden w-full sm:w-auto bg-green-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition transform hover:scale-105">
+                            Download Excel Report
+                        </button>
+                    </div>
                     <div class="max-h-96 overflow-y-auto custom-scrollbar border border-gray-200 rounded-lg">
                         <table class="min-w-full divide-y divide-gray-200">
                             <thead class="bg-gray-100 sticky top-0">
@@ -142,6 +149,7 @@
         const monthlyPaymentEl = document.getElementById('monthlyPayment');
         const totalRepayableEl = document.getElementById('totalRepayable');
         const errorMessage = document.getElementById('error-message');
+        const downloadBtn = document.getElementById('download-excel');
         
         const chartCanvas = document.getElementById('paymentChart');
         const amortizationBody = document.getElementById('amortization-body');
@@ -157,6 +165,73 @@
             }).format(num);
         };
 
+        const generateAndDownloadExcel = (principal, annualInterestRate, years, numberOfPayments) => {
+            // 1. Setup Workbook and Worksheet
+            const wb = XLSX.utils.book_new();
+            const ws_name = "Amortization Schedule";
+            const ws = {}; // We will build the worksheet cell by cell
+
+            // Helper to encode cell address (e.g., {r:0, c:0} -> "A1")
+            const encode = (r, c) => XLSX.utils.encode_cell({ r, c });
+
+            // 2. Add Summary Data and Formulas
+            const currencyFormat = `"Ft" #,##0`;
+            // Labels
+            ws[encode(0, 0)] = { t: 's', v: 'Loan Amount' };
+            ws[encode(1, 0)] = { t: 's', v: 'Annual Interest Rate' };
+            ws[encode(2, 0)] = { t: 's', v: 'Loan Term (Years)' };
+            ws[encode(4, 0)] = { t: 's', v: 'Monthly Payment' };
+
+            // Values with Excel formulas where possible
+            ws[encode(0, 1)] = { t: 'n', v: principal, z: currencyFormat };
+            ws[encode(1, 1)] = { t: 'n', v: annualInterestRate / 100, z: '0.00%' }; // Store as decimal, format as %
+            ws[encode(2, 1)] = { t: 'n', v: years };
+            // Excel's PMT formula: PMT(rate, nper, pv)
+            // rate = B2/12, nper = B3*12, pv = -B1 (present value must be negative)
+            ws[encode(4, 1)] = { t: 'n', f: `PMT(B2/12, B3*12, -B1)`, z: currencyFormat };
+
+            // 3. Add Table Headers
+            const headers = ["Month", "Principal", "Interest", "Total Payment", "Remaining Balance"];
+            const headerRowIndex = 7;
+            headers.forEach((h, c) => {
+                ws[encode(headerRowIndex, c)] = { t: 's', v: h, s: { font: { bold: true } } };
+            });
+
+            // 4. Populate Amortization Data with Formulas
+            // Set initial balance in the row above the first payment data for formula reference
+            ws[encode(headerRowIndex + 1, 4)] = { t: 'n', f: 'B1', z: currencyFormat };
+
+            for (let i = 0; i < numberOfPayments; i++) {
+                const r = headerRowIndex + 2 + i; // Current data row in Excel
+                const prev_r = r - 1;
+
+                // Month Number
+                ws[encode(r, 0)] = { t: 'n', v: i + 1 };
+
+                // Interest: =E(prev_row) * ($B$2/12)
+                ws[encode(r, 2)] = { t: 'n', f: `${encode(prev_r, 4)}*($B$2/12)`, z: currencyFormat };
+
+                // Principal: =$B$5 - C(current_row)
+                ws[encode(r, 1)] = { t: 'n', f: `$B$5 - ${encode(r, 2)}`, z: currencyFormat };
+                
+                // Total Payment: =$B$5
+                ws[encode(r, 3)] = { t: 'n', f: '$B$5', z: currencyFormat };
+
+                // Remaining Balance: =E(prev_row) - B(current_row)
+                ws[encode(r, 4)] = { t: 'n', f: `${encode(prev_r, 4)} - ${encode(r, 1)}`, z: currencyFormat };
+            }
+
+            // 5. Set column widths and finalize worksheet
+            ws['!cols'] = [{ wch: 10 }, { wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 25 }];
+            const range = { s: { c: 0, r: 0 }, e: { c: headers.length, r: headerRowIndex + numberOfPayments + 2 } };
+            ws['!ref'] = XLSX.utils.encode_range(range);
+
+            // 6. Add worksheet to workbook and trigger download
+            XLSX.utils.book_append_sheet(wb, ws, ws_name);
+            XLSX.writeFile(wb, 'Financial-Hub_Annuity_Report.xlsx');
+        };
+
+
         loanForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
@@ -166,9 +241,10 @@
             const years = parseInt(document.getElementById('loanTerm').value);
             
             // --- 2. VALIDATE INPUT ---
-            if (isNaN(principal) || isNaN(annualInterestRate) || isNaN(years) || principal <= 0 || annualInterestRate <= 0 || years <= 0) {
+            if (isNaN(principal) || isNaN(annualInterestRate) || isNaN(years) || principal <= 0 || annualInterestRate < 0 || years <= 0) {
                 errorMessage.classList.remove('hidden');
                 resultsSection.classList.add('hidden');
+                downloadBtn.classList.add('hidden');
                 return;
             } else {
                  errorMessage.classList.add('hidden');
@@ -186,6 +262,7 @@
                  errorMessage.querySelector('span').textContent = 'Calculation resulted in an invalid number. Please check your inputs.';
                  errorMessage.classList.remove('hidden');
                  resultsSection.classList.add('hidden');
+                 downloadBtn.classList.add('hidden');
                  return;
             }
 
@@ -301,6 +378,23 @@
                     }
                 }
             });
+            
+            // --- 7. SETUP EXCEL DOWNLOAD ---
+            downloadBtn.classList.remove('hidden');
+
+            const excelDownloadHandler = () => generateAndDownloadExcel(principal, annualInterestRate, years, numberOfPayments);
+
+            // Remove the old listener before adding a new one to prevent it from using old data
+            if (downloadBtn.handler) {
+                downloadBtn.removeEventListener('click', downloadBtn.handler);
+            }
+            
+            // Attach the new listener
+            downloadBtn.addEventListener('click', excelDownloadHandler);
+            
+            // Store the handler on the element so we can remove it next time
+            downloadBtn.handler = excelDownloadHandler;
+
         });
 
         // Trigger calculation on page load with default values
@@ -310,6 +404,4 @@
     </script>
 </body>
 </html>
-
-
 
