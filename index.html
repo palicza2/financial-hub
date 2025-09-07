@@ -142,12 +142,19 @@
 
                 <section aria-labelledby="savings-form-heading">
                     <h2 id="savings-form-heading" class="sr-only">Savings Details Form</h2>
-                    <form id="savings-form" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <form id="savings-form" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                         <div>
                             <label for="monthlySaving" class="block text-sm font-medium text-gray-700 mb-2">Monthly Saving (Ft)</label>
                             <div class="flex items-center bg-white border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-indigo-500 transition duration-150 overflow-hidden">
                                <span class="px-3 py-2 text-gray-500 border-r border-gray-300 bg-gray-50">Ft</span>
                                <input type="number" id="monthlySaving" value="50000" class="w-full px-3 py-2 bg-transparent border-0 focus:ring-0 text-gray-800" placeholder="50000">
+                            </div>
+                        </div>
+                        <div>
+                            <label for="maturityYears" class="block text-sm font-medium text-gray-700 mb-2">Maturity (Years)</label>
+                            <div class="flex items-center bg-white border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-indigo-500 transition duration-150 overflow-hidden">
+                               <span class="px-3 py-2 text-gray-500 border-r border-gray-300 bg-gray-50">Years</span>
+                               <input type="number" id="maturityYears" value="10" class="w-full px-3 py-2 bg-transparent border-0 focus:ring-0 text-gray-800" placeholder="10">
                             </div>
                         </div>
                         <div>
@@ -164,7 +171,7 @@
                                <input type="number" id="realYieldRate" step="0.01" value="4" class="w-full px-3 py-2 bg-transparent border-0 focus:ring-0 text-gray-800" placeholder="4">
                             </div>
                         </div>
-                        <div class="md:col-span-3 text-center">
+                        <div class="md:col-span-2 text-center">
                             <button type="submit" class="w-full md:w-auto bg-indigo-600 text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition transform hover:scale-105">Calculate Savings</button>
                         </div>
                     </form>
@@ -179,7 +186,7 @@
                      <h2 id="savings-results-heading" class="sr-only">Savings Calculation Results</h2>
                      <div class="grid grid-cols-1 gap-6 text-center mb-8 bg-indigo-50 p-6 rounded-lg">
                         <div>
-                            <h3 class="text-lg font-medium text-gray-600">Future Value (After 50 Years)</h3>
+                            <h3 id="futureValueLabel" class="text-lg font-medium text-gray-600">Future Value</h3>
                             <p id="futureValue" class="text-3xl sm:text-4xl font-bold text-indigo-600 mt-2"></p>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
@@ -384,6 +391,7 @@
             const savingsForm = document.getElementById('savings-form');
             const resultsSection = document.getElementById('savings-results-section');
             const futureValueEl = document.getElementById('futureValue');
+            const futureValueLabel = document.getElementById('futureValueLabel');
             const totalCapitalEl = document.getElementById('totalCapital');
             const totalGainsEl = document.getElementById('totalGains');
             const errorMessage = document.getElementById('savings-error-message');
@@ -391,9 +399,18 @@
             const chartCanvas = document.getElementById('savingsChart');
             const breakdownBody = document.getElementById('savings-breakdown-body');
             let savingsChart = null;
-            const savingsYears = 50;
 
-            const generateAndDownloadSavingsExcel = (monthlySaving, inflationRate, realYieldRate) => {
+            const formatAxisTick = (value) => {
+                if (Math.abs(value) >= 1000000) {
+                    return `${(value / 1000000).toFixed(1)}M Ft`;
+                }
+                if (Math.abs(value) >= 1000) {
+                    return `${Math.round(value / 1000)}K Ft`;
+                }
+                return `${value} Ft`;
+            };
+
+            const generateAndDownloadSavingsExcel = (monthlySaving, inflationRate, realYieldRate, maturityYears) => {
                 const wb = XLSX.utils.book_new();
                 const ws_name = "Savings Projection";
                 const ws = {};
@@ -403,23 +420,25 @@
 
                 // Inputs
                 ws[encode(0, 0)] = { t: 's', v: 'Monthly Saving' };
-                ws[encode(1, 0)] = { t: 's', v: 'Annual Inflation Rate' };
-                ws[encode(2, 0)] = { t: 's', v: 'Annual Real Yield' };
+                ws[encode(1, 0)] = { t: 's', v: 'Maturity (Years)' };
+                ws[encode(2, 0)] = { t: 's', v: 'Annual Inflation Rate' };
+                ws[encode(3, 0)] = { t: 's', v: 'Annual Real Yield' };
                 ws[encode(0, 1)] = { t: 'n', v: monthlySaving, z: currencyFormat };
-                ws[encode(1, 1)] = { t: 'n', v: inflationRate / 100, z: percentFormat };
-                ws[encode(2, 1)] = { t: 'n', v: realYieldRate / 100, z: percentFormat };
+                ws[encode(1, 1)] = { t: 'n', v: maturityYears };
+                ws[encode(2, 1)] = { t: 'n', v: inflationRate / 100, z: percentFormat };
+                ws[encode(3, 1)] = { t: 'n', v: realYieldRate / 100, z: percentFormat };
 
                 // Calculated Nominal Yield
-                ws[encode(4, 0)] = { t: 's', v: 'Calculated Nominal Yield' };
-                ws[encode(4, 1)] = { t: 'n', f: `(1+B2)*(1+B3)-1`, z: percentFormat };
+                ws[encode(5, 0)] = { t: 's', v: 'Calculated Nominal Yield' };
+                ws[encode(5, 1)] = { t: 'n', f: `(1+B3)*(1+B4)-1`, z: percentFormat };
 
                 // Table Headers
                 const headers = ["Year", "Capital Invested", "Gains", "Total Value"];
-                const headerRowIndex = 6;
+                const headerRowIndex = 7;
                 headers.forEach((h, c) => { ws[encode(headerRowIndex, c)] = { t: 's', v: h, s: { font: { bold: true } } }; });
 
                 // Table Data with formulas
-                for (let i = 0; i < savingsYears; i++) {
+                for (let i = 0; i < maturityYears; i++) {
                     const r = headerRowIndex + 1 + i;
                     const prev_r = r - 1;
 
@@ -428,9 +447,9 @@
                     
                     // Total Value (D)
                     if (i === 0) {
-                        ws[encode(r, 3)] = { t: 'n', f: `($B$1*12)*(1+$B$5)`, z: currencyFormat };
+                        ws[encode(r, 3)] = { t: 'n', f: `($B$1*12)*(1+$B$6)`, z: currencyFormat };
                     } else {
-                        ws[encode(r, 3)] = { t: 'n', f: `(${encode(prev_r, 3)}+($B$1*12))*(1+$B$5)`, z: currencyFormat };
+                        ws[encode(r, 3)] = { t: 'n', f: `(${encode(prev_r, 3)}+($B$1*12))*(1+$B$6)`, z: currencyFormat };
                     }
                     
                     // Capital Invested (B)
@@ -447,14 +466,14 @@
                 XLSX.writeFile(wb, 'Financial-Hub_Savings_Report.xlsx');
             };
 
-
             savingsForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 const monthlySaving = parseFloat(document.getElementById('monthlySaving').value);
+                const maturityYears = parseInt(document.getElementById('maturityYears').value);
                 const inflationRate = parseFloat(document.getElementById('inflationRate').value);
                 const realYieldRate = parseFloat(document.getElementById('realYieldRate').value);
 
-                if (isNaN(monthlySaving) || isNaN(inflationRate) || isNaN(realYieldRate) || monthlySaving <= 0) {
+                if (isNaN(monthlySaving) || isNaN(maturityYears) || isNaN(inflationRate) || isNaN(realYieldRate) || monthlySaving <= 0 || maturityYears <= 0) {
                     errorMessage.classList.remove('hidden'); resultsSection.classList.add('hidden'); return;
                 } else { errorMessage.classList.add('hidden'); }
 
@@ -463,7 +482,7 @@
                 let totalCapital = 0;
                 const savingsData = [];
 
-                for (let year = 1; year <= savingsYears; year++) {
+                for (let year = 1; year <= maturityYears; year++) {
                     let yearlyCapital = monthlySaving * 12;
                     let interestThisYear = balance * nominalYield;
                     balance += yearlyCapital + interestThisYear;
@@ -472,7 +491,8 @@
                     savingsData.push({ year, capital: totalCapital, gains: totalGains, total: balance });
                 }
                 
-                const finalResult = savingsData[savingsData.length - 1];
+                futureValueLabel.textContent = `Future Value (After ${maturityYears} Years)`;
+                const finalResult = savingsData.length > 0 ? savingsData[savingsData.length - 1] : { total: 0, capital: 0, gains: 0 };
                 futureValueEl.textContent = formatCurrency(finalResult.total);
                 totalCapitalEl.textContent = formatCurrency(finalResult.capital);
                 totalGainsEl.textContent = formatCurrency(finalResult.gains);
@@ -497,12 +517,12 @@
                     options: {
                         responsive: true, maintainAspectRatio: false,
                         plugins: { title: { display: true, text: 'Growth of Savings: Capital vs. Gains', font: { size: 16 }, color: '#374151' }, tooltip: { callbacks: { label: (context) => `${context.dataset.label || ''}: ${formatCurrency(context.parsed.y)}` } } },
-                        scales: { x: { stacked: true, title: { display: true, text: 'Years' } }, y: { stacked: true, title: { display: true, text: 'Value (Ft)' }, ticks: { callback: (value) => `${(value / 1000000).toFixed(1)}M Ft` } } }
+                        scales: { x: { stacked: true, title: { display: true, text: 'Years' } }, y: { stacked: true, title: { display: true, text: 'Value (Ft)' }, ticks: { callback: formatAxisTick } } }
                     }
                 });
 
                 downloadBtn.classList.remove('hidden');
-                const excelDownloadHandler = () => generateAndDownloadSavingsExcel(monthlySaving, inflationRate, realYieldRate);
+                const excelDownloadHandler = () => generateAndDownloadSavingsExcel(monthlySaving, inflationRate, realYieldRate, maturityYears);
                 if (downloadBtn.handler) { downloadBtn.removeEventListener('click', downloadBtn.handler); }
                 downloadBtn.addEventListener('click', excelDownloadHandler);
                 downloadBtn.handler = excelDownloadHandler;
