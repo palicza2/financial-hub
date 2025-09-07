@@ -235,18 +235,31 @@
         const annuityContent = document.getElementById('annuity-content');
         const savingsContent = document.getElementById('savings-content');
         
-        annuityTabBtn.addEventListener('click', () => {
-            annuityContent.classList.remove('hidden');
-            savingsContent.classList.add('hidden');
-            annuityTabBtn.classList.add('active');
-            savingsTabBtn.classList.remove('active');
+        const showTab = (tabId) => {
+            if (tabId === 'savings') {
+                savingsContent.classList.remove('hidden');
+                annuityContent.classList.add('hidden');
+                savingsTabBtn.classList.add('active');
+                annuityTabBtn.classList.remove('active');
+            } else { // Default to annuity
+                annuityContent.classList.remove('hidden');
+                savingsContent.classList.add('hidden');
+                annuityTabBtn.classList.add('active');
+                savingsTabBtn.classList.remove('active');
+            }
+        };
+
+        annuityTabBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showTab('annuity');
+            // Use pushState for a cleaner URL change without a page jump
+            history.pushState(null, '', '#annuity');
         });
 
-        savingsTabBtn.addEventListener('click', () => {
-            savingsContent.classList.remove('hidden');
-            annuityContent.classList.add('hidden');
-            savingsTabBtn.classList.add('active');
-            annuityTabBtn.classList.remove('active');
+        savingsTabBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showTab('savings');
+            history.pushState(null, '', '#savings');
         });
 
         // --- ANNUITY CALCULATOR LOGIC ---
@@ -531,7 +544,12 @@
         })();
         
         document.addEventListener('DOMContentLoaded', () => {
-           // Both forms are triggered inside their IIFE blocks.
+           const initialTab = window.location.hash.substring(1);
+            if (initialTab === 'savings') {
+                showTab('savings');
+            } else {
+                showTab('annuity'); // Default view
+            }
         });
     </script>
 </body>
