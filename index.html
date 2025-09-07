@@ -42,6 +42,10 @@
             color: #4f46e5;
             background-color: #eef2ff;
         }
+        .lang-button.active {
+            background-color: #4f46e5;
+            color: white;
+        }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
@@ -49,83 +53,88 @@
     <main class="container mx-auto">
         <div class="bg-white/70 backdrop-blur-sm rounded-2xl shadow-xl p-6 md:p-8 max-w-4xl mx-auto border border-gray-200">
 
+            <!-- Header with Language Switcher -->
+            <div class="flex justify-between items-center mb-4">
+                <div></div> <!-- Placeholder for alignment -->
+                <div class="border border-gray-300 rounded-lg p-1 flex space-x-1">
+                    <button id="lang-en-btn" class="lang-button text-sm font-bold py-1 px-3 rounded-md transition">EN</button>
+                    <button id="lang-hu-btn" class="lang-button text-sm font-bold py-1 px-3 rounded-md transition">HU</button>
+                </div>
+            </div>
+
             <!-- Tab Navigation -->
             <div class="flex border-b border-gray-300 mb-6">
-                <button id="annuity-tab-btn" class="tab-button active flex-1 sm:flex-none text-gray-500 font-semibold py-3 px-6 border-b-2 border-transparent hover:text-indigo-600 transition">Annuity Calculator</button>
-                <button id="savings-tab-btn" class="tab-button flex-1 sm:flex-none text-gray-500 font-semibold py-3 px-6 border-b-2 border-transparent hover:text-indigo-600 transition">Savings Calculator</button>
+                <button id="annuity-tab-btn" data-translate-key="annuityTab" class="tab-button active flex-1 sm:flex-none font-semibold py-3 px-6 border-b-2 border-transparent hover:text-indigo-600 transition">Annuity Calculator</button>
+                <button id="savings-tab-btn" data-translate-key="savingsTab" class="tab-button flex-1 sm:flex-none font-semibold py-3 px-6 border-b-2 border-transparent hover:text-indigo-600 transition">Savings Calculator</button>
             </div>
 
             <!-- Annuity Calculator Content -->
             <div id="annuity-content">
-                <!-- Header Section -->
                 <header class="text-center mb-8">
-                    <h1 class="text-3xl md:text-4xl font-bold text-gray-800">Annuity Calculator</h1>
-                    <p class="text-gray-500 mt-2">Calculate your monthly loan payments and see the principal vs. interest breakdown.</p>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-800" data-translate-key="annuityTitle">Annuity Calculator</h1>
+                    <p class="text-gray-500 mt-2" data-translate-key="annuityDescription">Calculate your monthly loan payments and see the principal vs. interest breakdown.</p>
                 </header>
 
-                <!-- Input Form Section -->
                 <section aria-labelledby="form-heading">
                     <h2 id="form-heading" class="sr-only">Loan Details Form</h2>
                     <form id="loan-form" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                         <div>
-                            <label for="loanAmount" class="block text-sm font-medium text-gray-700 mb-2">Loan Amount (Ft)</label>
+                            <label for="loanAmount" class="block text-sm font-medium text-gray-700 mb-2" data-translate-key="loanAmountLabel">Loan Amount (Ft)</label>
                             <div class="flex items-center bg-white border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-indigo-500 transition duration-150 overflow-hidden">
                                <span class="px-3 py-2 text-gray-500 border-r border-gray-300 bg-gray-50">Ft</span>
                                <input type="number" id="loanAmount" value="100000000" class="w-full px-3 py-2 bg-transparent border-0 focus:ring-0 text-gray-800" placeholder="100000000">
                             </div>
                         </div>
                         <div>
-                            <label for="interestRate" class="block text-sm font-medium text-gray-700 mb-2">Annual Interest Rate (%)</label>
+                            <label for="interestRate" class="block text-sm font-medium text-gray-700 mb-2" data-translate-key="annualInterestRateLabel">Annual Interest Rate (%)</label>
                             <div class="flex items-center bg-white border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-indigo-500 transition duration-150 overflow-hidden">
                                <span class="px-3 py-2 text-gray-500 border-r border-gray-300 bg-gray-50">%</span>
                                <input type="number" id="interestRate" step="0.01" value="5" class="w-full px-3 py-2 bg-transparent border-0 focus:ring-0 text-gray-800" placeholder="5">
                             </div>
                         </div>
                         <div>
-                            <label for="loanTerm" class="block text-sm font-medium text-gray-700 mb-2">Loan Term (Years)</label>
+                            <label for="loanTerm" class="block text-sm font-medium text-gray-700 mb-2" data-translate-key="loanTermLabel">Loan Term (Years)</label>
                             <div class="flex items-center bg-white border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-indigo-500 transition duration-150 overflow-hidden">
-                                <div class="px-3 py-2 text-gray-500 border-r border-gray-300 bg-gray-50 flex items-center justify-center">
-                                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0h18M12 15.75h.008v.008H12v-.008Z" /></svg>
-                                </div>
+                                <div class="px-3 py-2 text-gray-500 border-r border-gray-300 bg-gray-50 flex items-center justify-center"><svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0h18M12 15.75h.008v.008H12v-.008Z" /></svg></div>
                                <input type="number" id="loanTerm" value="25" class="w-full px-3 py-2 bg-transparent border-0 focus:ring-0 text-gray-800" placeholder="25">
                             </div>
                         </div>
                          <div class="md:col-span-3 flex items-center justify-center mt-2">
                             <input type="checkbox" id="gracePeriod" name="gracePeriod" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                            <label for="gracePeriod" class="ml-2 block text-sm text-gray-900">1-Year Grace Period (Interest-Only)</label>
+                            <label for="gracePeriod" class="ml-2 block text-sm text-gray-900" data-translate-key="gracePeriodLabel">1-Year Grace Period (Interest-Only)</label>
                         </div>
                         <div class="md:col-span-3 text-center">
-                            <button type="submit" class="w-full md:w-auto bg-indigo-600 text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition transform hover:scale-105">Calculate</button>
+                            <button type="submit" class="w-full md:w-auto bg-indigo-600 text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition transform hover:scale-105" data-translate-key="calculateButton">Calculate</button>
                         </div>
                     </form>
                 </section>
                 
                 <div id="annuity-error-message" class="hidden text-center bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative mb-6" role="alert">
-                    <strong class="font-bold">Invalid Input!</strong>
-                    <span class="block sm:inline">Please enter valid, positive numbers for all fields.</span>
+                    <strong class="font-bold" data-translate-key="errorTitle">Invalid Input!</strong>
+                    <span class="block sm:inline" data-translate-key="annuityErrorText">Please enter valid, positive numbers for all fields.</span>
                 </div>
 
                 <section id="annuity-results-section" class="hidden" aria-labelledby="annuity-results-heading">
                      <h2 id="annuity-results-heading" class="sr-only">Loan Calculation Results</h2>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-center mb-8 bg-indigo-50 p-6 rounded-lg">
                         <div>
-                            <h3 id="monthlyPaymentLabel" class="text-lg font-medium text-gray-600">Your Monthly Payment</h3>
+                            <h3 id="monthlyPaymentLabel" class="text-lg font-medium text-gray-600" data-translate-key="monthlyPaymentLabel">Your Monthly Payment</h3>
                             <p id="monthlyPayment" class="text-3xl sm:text-4xl font-bold text-indigo-600 mt-2"></p>
                         </div>
                         <div>
-                            <h3 class="text-lg font-medium text-gray-600">Total Repayable Amount</h3>
+                            <h3 class="text-lg font-medium text-gray-600" data-translate-key="totalRepayableLabel">Total Repayable Amount</h3>
                             <p id="totalRepayable" class="text-3xl sm:text-4xl font-bold text-gray-700 mt-2"></p>
                         </div>
                     </div>
                     <div class="text-center mb-8">
-                         <button id="download-excel" class="hidden w-full sm:w-auto bg-green-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition transform hover:scale-105">Download Excel Report</button>
+                         <button id="download-excel" class="hidden w-full sm:w-auto bg-green-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition transform hover:scale-105" data-translate-key="downloadExcelButton">Download Excel Report</button>
                     </div>
                     <div class="w-full h-72 md:h-96 bg-gray-50 p-2 sm:p-4 rounded-lg shadow-inner"><canvas id="paymentChart"></canvas></div>
                     <div class="mt-8">
-                        <h3 class="text-xl font-semibold text-gray-700 text-center mb-4">Amortization Schedule</h3>
+                        <h3 class="text-xl font-semibold text-gray-700 text-center mb-4" data-translate-key="amortizationScheduleTitle">Amortization Schedule</h3>
                         <div class="max-h-96 overflow-y-auto custom-scrollbar border border-gray-200 rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-100 sticky top-0"><tr><th scope="col" class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Month</th><th scope="col" class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Principal</th><th scope="col" class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Interest</th><th scope="col" class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Payment</th><th scope="col" class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Remaining Balance</th></tr></thead>
+                                <thead id="annuity-table-head" class="bg-gray-100 sticky top-0"></thead>
                                 <tbody id="amortization-body" class="bg-white divide-y divide-gray-200"></tbody>
                             </table>
                         </div>
@@ -133,82 +142,85 @@
                 </section>
             </div>
             
-            <!-- Savings Calculator Content -->
             <div id="savings-content" class="hidden">
                  <header class="text-center mb-8">
-                    <h1 class="text-3xl md:text-4xl font-bold text-gray-800">Savings Calculator</h1>
-                    <p class="text-gray-500 mt-2">Project the future value of your savings and see your capital grow.</p>
+                    <h1 class="text-3xl md:text-4xl font-bold text-gray-800" data-translate-key="savingsTitle">Savings Calculator</h1>
+                    <p class="text-gray-500 mt-2" data-translate-key="savingsDescription">Project the future value of your savings and see your capital grow.</p>
                 </header>
 
                 <section aria-labelledby="savings-form-heading">
                     <h2 id="savings-form-heading" class="sr-only">Savings Details Form</h2>
                     <form id="savings-form" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                         <div>
-                            <label for="monthlySaving" class="block text-sm font-medium text-gray-700 mb-2">Monthly Saving (Ft)</label>
+                            <label for="monthlySaving" class="block text-sm font-medium text-gray-700 mb-2" data-translate-key="monthlySavingLabel">Monthly Saving (Ft)</label>
                             <div class="flex items-center bg-white border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-indigo-500 transition duration-150 overflow-hidden">
                                <span class="px-3 py-2 text-gray-500 border-r border-gray-300 bg-gray-50">Ft</span>
                                <input type="number" id="monthlySaving" value="50000" class="w-full px-3 py-2 bg-transparent border-0 focus:ring-0 text-gray-800" placeholder="50000">
                             </div>
                         </div>
                         <div>
-                            <label for="maturityYears" class="block text-sm font-medium text-gray-700 mb-2">Maturity (Years)</label>
+                            <label for="maturityYears" class="block text-sm font-medium text-gray-700 mb-2" data-translate-key="maturityLabel">Maturity (Years)</label>
                             <div class="flex items-center bg-white border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-indigo-500 transition duration-150 overflow-hidden">
-                               <span class="px-3 py-2 text-gray-500 border-r border-gray-300 bg-gray-50">Years</span>
+                               <span id="maturityYearsSuffix" class="px-3 py-2 text-gray-500 border-r border-gray-300 bg-gray-50" data-translate-key="yearsSuffix">Years</span>
                                <input type="number" id="maturityYears" value="10" class="w-full px-3 py-2 bg-transparent border-0 focus:ring-0 text-gray-800" placeholder="10">
                             </div>
                         </div>
                         <div>
-                            <label for="inflationRate" class="block text-sm font-medium text-gray-700 mb-2">Annual Inflation Rate (%)</label>
+                            <label for="inflationRate" class="block text-sm font-medium text-gray-700 mb-2" data-translate-key="inflationRateLabel">Annual Inflation Rate (%)</label>
                             <div class="flex items-center bg-white border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-indigo-500 transition duration-150 overflow-hidden">
                                <span class="px-3 py-2 text-gray-500 border-r border-gray-300 bg-gray-50">%</span>
                                <input type="number" id="inflationRate" step="0.01" value="3" class="w-full px-3 py-2 bg-transparent border-0 focus:ring-0 text-gray-800" placeholder="3">
                             </div>
                         </div>
                         <div>
-                            <label for="realYieldRate" class="block text-sm font-medium text-gray-700 mb-2">Annual Real Yield (%)</label>
+                            <label for="realYieldRate" class="block text-sm font-medium text-gray-700 mb-2" data-translate-key="realYieldLabel">Annual Real Yield (%)</label>
                             <div class="flex items-center bg-white border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-indigo-500 transition duration-150 overflow-hidden">
                                <span class="px-3 py-2 text-gray-500 border-r border-gray-300 bg-gray-50">%</span>
                                <input type="number" id="realYieldRate" step="0.01" value="4" class="w-full px-3 py-2 bg-transparent border-0 focus:ring-0 text-gray-800" placeholder="4">
                             </div>
                         </div>
                         <div class="md:col-span-2 text-center">
-                            <button type="submit" class="w-full md:w-auto bg-indigo-600 text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition transform hover:scale-105">Calculate Savings</button>
+                             <div class="flex items-center justify-center mb-4">
+                               <input type="checkbox" id="compoundInterest" name="compoundInterest" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" checked>
+                               <label for="compoundInterest" class="ml-2 block text-sm text-gray-900" data-translate-key="compoundInterestLabel">Apply Compound Interest</label>
+                           </div>
+                            <button type="submit" class="w-full md:w-auto bg-indigo-600 text-white font-semibold py-3 px-8 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition transform hover:scale-105" data-translate-key="calculateSavingsButton">Calculate Savings</button>
                         </div>
                     </form>
                 </section>
                 
                 <div id="savings-error-message" class="hidden text-center bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative mb-6" role="alert">
-                    <strong class="font-bold">Invalid Input!</strong>
-                    <span class="block sm:inline">Please enter valid numbers for all fields.</span>
+                    <strong class="font-bold" data-translate-key="errorTitle">Invalid Input!</strong>
+                    <span class="block sm:inline" data-translate-key="savingsErrorText">Please enter valid numbers for all fields.</span>
                 </div>
 
                 <section id="savings-results-section" class="hidden" aria-labelledby="savings-results-heading">
                      <h2 id="savings-results-heading" class="sr-only">Savings Calculation Results</h2>
                      <div class="grid grid-cols-1 gap-6 text-center mb-8 bg-indigo-50 p-6 rounded-lg">
                         <div>
-                            <h3 id="futureValueLabel" class="text-lg font-medium text-gray-600">Future Value</h3>
+                            <h3 id="futureValueLabel" class="text-lg font-medium text-gray-600" data-translate-key="futureValueLabel">Future Value</h3>
                             <p id="futureValue" class="text-3xl sm:text-4xl font-bold text-indigo-600 mt-2"></p>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
                              <div>
-                                <h3 class="text-md font-medium text-gray-600">Total Capital Invested</h3>
+                                <h3 class="text-md font-medium text-gray-600" data-translate-key="totalCapitalLabel">Total Capital Invested</h3>
                                 <p id="totalCapital" class="text-2xl font-semibold text-gray-700 mt-1"></p>
                             </div>
                              <div>
-                                <h3 class="text-md font-medium text-gray-600">Total Gains</h3>
+                                <h3 class="text-md font-medium text-gray-600" data-translate-key="totalGainsLabel">Total Gains</h3>
                                 <p id="totalGains" class="text-2xl font-semibold text-gray-700 mt-1"></p>
                             </div>
                         </div>
                     </div>
                      <div class="text-center mb-8">
-                         <button id="download-savings-excel" class="hidden w-full sm:w-auto bg-green-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition transform hover:scale-105">Download Excel Report</button>
+                         <button id="download-savings-excel" class="hidden w-full sm:w-auto bg-green-600 text-white font-semibold py-2 px-6 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition transform hover:scale-105" data-translate-key="downloadExcelButton">Download Excel Report</button>
                     </div>
                     <div class="w-full h-72 md:h-96 bg-gray-50 p-2 sm:p-4 rounded-lg shadow-inner"><canvas id="savingsChart"></canvas></div>
                     <div class="mt-8">
-                        <h3 class="text-xl font-semibold text-gray-700 text-center mb-4">Yearly Savings Growth</h3>
+                        <h3 class="text-xl font-semibold text-gray-700 text-center mb-4" data-translate-key="yearlyGrowthTitle">Yearly Savings Growth</h3>
                         <div class="max-h-96 overflow-y-auto custom-scrollbar border border-gray-200 rounded-lg">
                             <table class="min-w-full divide-y divide-gray-200">
-                                <thead class="bg-gray-100 sticky top-0"><tr><th scope="col" class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Year</th><th scope="col" class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Capital Invested</th><th scope="col" class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gains</th><th scope="col" class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Value</th></tr></thead>
+                                <thead id="savings-table-head" class="bg-gray-100 sticky top-0"></thead>
                                 <tbody id="savings-breakdown-body" class="bg-white divide-y divide-gray-200"></tbody>
                             </table>
                         </div>
@@ -219,14 +231,141 @@
     </main>
 
     <script>
-        // --- COMMON ELEMENTS & FUNCTIONS ---
-        const formatCurrency = (num) => {
-            return new Intl.NumberFormat('hu-HU', {
-                style: 'currency',
-                currency: 'HUF',
-                maximumFractionDigits: 0,
-                minimumFractionDigits: 0
-            }).format(num);
+        // --- TRANSLATION DATA ---
+        const translations = {
+            en: {
+                annuityTab: "Annuity Calculator",
+                savingsTab: "Savings Calculator",
+                annuityTitle: "Annuity Calculator",
+                annuityDescription: "Calculate your monthly loan payments and see the principal vs. interest breakdown.",
+                loanAmountLabel: "Loan Amount (Ft)",
+                annualInterestRateLabel: "Annual Interest Rate (%)",
+                loanTermLabel: "Loan Term (Years)",
+                gracePeriodLabel: "1-Year Grace Period (Interest-Only)",
+                calculateButton: "Calculate",
+                errorTitle: "Invalid Input!",
+                annuityErrorText: "Please enter valid, positive numbers for all fields.",
+                gracePeriodErrorText: "Grace period requires a loan term longer than 1 year.",
+                calculationErrorText: "Calculation resulted in an invalid number. Please check your inputs.",
+                monthlyPaymentLabel: "Your Monthly Payment",
+                monthlyPaymentAfterGraceLabel: "Monthly Payment (After Grace Period)",
+                totalRepayableLabel: "Total Repayable Amount",
+                downloadExcelButton: "Download Excel Report",
+                amortizationScheduleTitle: "Amortization Schedule",
+                chartTitleAnnuity: "Principal vs. Interest Payment Over Time",
+                chartPrincipal: "Principal",
+                chartInterest: "Interest",
+                chartMonths: "Months",
+                chartPaymentAmount: "Payment Amount (Ft)",
+                tableMonth: "Month",
+                tablePrincipal: "Principal",
+                tableInterest: "Interest",
+                tableTotalPayment: "Total Payment",
+                tableRemainingBalance: "Remaining Balance",
+                savingsTitle: "Savings Calculator",
+                savingsDescription: "Project the future value of your savings and see your capital grow.",
+                monthlySavingLabel: "Monthly Saving (Ft)",
+                maturityLabel: "Maturity (Years)",
+                yearsSuffix: "Years",
+                inflationRateLabel: "Annual Inflation Rate (%)",
+                realYieldLabel: "Annual Real Yield (%)",
+                compoundInterestLabel: "Apply Compound Interest",
+                calculateSavingsButton: "Calculate Savings",
+                savingsErrorText: "Please enter valid numbers for all fields.",
+                futureValueLabel: "Future Value (After {years} Years)",
+                totalCapitalLabel: "Total Capital Invested",
+                totalGainsLabel: "Total Gains",
+                yearlyGrowthTitle: "Yearly Savings Growth",
+                chartTitleSavings: "Growth of Savings: Capital vs. Gains",
+                chartCapital: "Capital Invested",
+                chartGains: "Gains",
+                chartYears: "Years",
+                chartValue: "Value (Ft)",
+                tableYear: "Year",
+                tableCapital: "Capital Invested",
+                tableGains: "Gains",
+                tableTotalValue: "Total Value",
+            },
+            hu: {
+                annuityTab: "Annuitás Kalkulátor",
+                savingsTab: "Megtakarítás Kalkulátor",
+                annuityTitle: "Annuitás Kalkulátor",
+                annuityDescription: "Számolja ki havi törlesztőrészletét és nézze meg a tőke-kamat megoszlást.",
+                loanAmountLabel: "Hitelösszeg (Ft)",
+                annualInterestRateLabel: "Éves kamatláb (%)",
+                loanTermLabel: "Futamidő (év)",
+                gracePeriodLabel: "1 év türelmi idő (csak kamatfizetés)",
+                calculateButton: "Számol",
+                errorTitle: "Érvénytelen adat!",
+                annuityErrorText: "Kérjük, adjon meg érvényes, pozitív számokat minden mezőben.",
+                gracePeriodErrorText: "A türelmi időhöz 1 évnél hosszabb futamidő szükséges.",
+                calculationErrorText: "A számítás érvénytelen eredményt adott. Kérjük, ellenőrizze az adatokat.",
+                monthlyPaymentLabel: "Havi törlesztőrészlet",
+                monthlyPaymentAfterGraceLabel: "Havi törlesztőrészlet (türelmi idő után)",
+                totalRepayableLabel: "Teljes visszafizetendő összeg",
+                downloadExcelButton: "Excel riport letöltése",
+                amortizationScheduleTitle: "Törlesztési táblázat",
+                chartTitleAnnuity: "Tőke és kamat aránya a futamidő alatt",
+                chartPrincipal: "Tőke",
+                chartInterest: "Kamat",
+                chartMonths: "Hónapok",
+                chartPaymentAmount: "Fizetendő összeg (Ft)",
+                tableMonth: "Hónap",
+                tablePrincipal: "Tőke",
+                tableInterest: "Kamat",
+                tableTotalPayment: "Teljes törlesztő",
+                tableRemainingBalance: "Fennmaradó tőke",
+                savingsTitle: "Megtakarítás Kalkulátor",
+                savingsDescription: "Tervezze meg megtakarításainak jövőbeli értékét és kövesse a növekedést.",
+                monthlySavingLabel: "Havi megtakarítás (Ft)",
+                maturityLabel: "Futamidő (év)",
+                yearsSuffix: "Év",
+                inflationRateLabel: "Éves infláció (%)",
+                realYieldLabel: "Éves reálhozam (%)",
+                compoundInterestLabel: "Kamatos kamat alkalmazása",
+                calculateSavingsButton: "Megtakarítás számítása",
+                savingsErrorText: "Kérjük, érvényes számokat adjon meg minden mezőben.",
+                futureValueLabel: "Jövőbeli érték ({years} év után)",
+                totalCapitalLabel: "Összes befektetett tőke",
+                totalGainsLabel: "Összes hozam",
+                yearlyGrowthTitle: "Éves növekedési ütem",
+                chartTitleSavings: "Megtakarítások növekedése: Tőke vs. Hozam",
+                chartCapital: "Befektetett tőke",
+                chartGains: "Hozam",
+                chartYears: "Évek",
+                chartValue: "Érték (Ft)",
+                tableYear: "Év",
+                tableCapital: "Befektetett tőke",
+                tableGains: "Hozam",
+                tableTotalValue: "Teljes érték",
+            }
+        };
+
+        // --- GLOBAL STATE ---
+        let currentLanguage = 'en';
+
+        // --- COMMON & UI FUNCTIONS ---
+        const formatCurrency = (num) => new Intl.NumberFormat('hu-HU', { style: 'currency', currency: 'HUF', maximumFractionDigits: 0, minimumFractionDigits: 0 }).format(num);
+
+        const setLanguage = (lang) => {
+            currentLanguage = lang;
+            localStorage.setItem('financialHubLang', lang);
+            document.documentElement.lang = lang;
+
+            document.querySelectorAll('[data-translate-key]').forEach(el => {
+                const key = el.dataset.translateKey;
+                if (translations[lang][key]) {
+                    el.textContent = translations[lang][key];
+                }
+            });
+
+            // Update active state on buttons
+            document.getElementById('lang-en-btn').classList.toggle('active', lang === 'en');
+            document.getElementById('lang-hu-btn').classList.toggle('active', lang === 'hu');
+
+            // Re-trigger calculations to update dynamic content like charts and tables
+            document.getElementById('loan-form').dispatchEvent(new Event('submit', { cancelable: true }));
+            document.getElementById('savings-form').dispatchEvent(new Event('submit', { cancelable: true }));
         };
 
         // --- TAB SWITCHING LOGIC ---
@@ -249,18 +388,10 @@
             }
         };
 
-        annuityTabBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            showTab('annuity');
-            // Use pushState for a cleaner URL change without a page jump
-            history.pushState(null, '', '#annuity');
-        });
-
-        savingsTabBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            showTab('savings');
-            history.pushState(null, '', '#savings');
-        });
+        annuityTabBtn.addEventListener('click', (e) => { e.preventDefault(); showTab('annuity'); history.pushState({tab: 'annuity'}, '', '#annuity'); });
+        savingsTabBtn.addEventListener('click', (e) => { e.preventDefault(); showTab('savings'); history.pushState({tab: 'savings'}, '', '#savings'); });
+        document.getElementById('lang-en-btn').addEventListener('click', () => setLanguage('en'));
+        document.getElementById('lang-hu-btn').addEventListener('click', () => setLanguage('hu'));
 
         // --- ANNUITY CALCULATOR LOGIC ---
         (function() {
@@ -269,88 +400,48 @@
             const monthlyPaymentEl = document.getElementById('monthlyPayment');
             const monthlyPaymentLabel = document.getElementById('monthlyPaymentLabel');
             const totalRepayableEl = document.getElementById('totalRepayable');
-            const errorMessage = document.getElementById('annuity-error-message');
+            const errorMessageEl = document.getElementById('annuity-error-message');
+            const errorTextEl = errorMessageEl.querySelector('span');
             const downloadBtn = document.getElementById('download-excel');
             const chartCanvas = document.getElementById('paymentChart');
             const amortizationBody = document.getElementById('amortization-body');
+            const tableHead = document.getElementById('annuity-table-head');
             let paymentChart = null;
 
-            const generateAndDownloadExcel = (principal, annualInterestRate, years, hasGracePeriod) => {
-                const numberOfPayments = years * 12;
-                const wb = XLSX.utils.book_new();
-                const ws_name = "Amortization Schedule";
-                const ws = {};
-                const encode = (r, c) => XLSX.utils.encode_cell({ r, c });
-                const currencyFormat = `"Ft" #,##0`;
-
-                ws[encode(0, 0)] = { t: 's', v: 'Loan Amount' };
-                ws[encode(1, 0)] = { t: 's', v: 'Annual Interest Rate' };
-                ws[encode(2, 0)] = { t: 's', v: 'Loan Term (Years)' };
-                ws[encode(3, 0)] = { t: 's', v: 'Grace Period' };
-                ws[encode(0, 1)] = { t: 'n', v: principal, z: currencyFormat };
-                ws[encode(1, 1)] = { t: 'n', v: annualInterestRate / 100, z: '0.00%' };
-                ws[encode(2, 1)] = { t: 'n', v: years };
-                ws[encode(3, 1)] = { t: 's', v: (hasGracePeriod && years > 1) ? 'Yes (1 Year)' : 'No' };
-                
-                const headers = ["Month", "Principal", "Interest", "Total Payment", "Remaining Balance"];
-                let headerRowIndex = 7;
-
-                if (hasGracePeriod && years > 1) {
-                    ws[encode(5, 0)] = { t: 's', v: 'Interest-Only Payment (Months 1-12)' };
-                    ws[encode(5, 1)] = { t: 'n', f: `B1*(B2/12)`, z: currencyFormat };
-                    ws[encode(6, 0)] = { t: 's', v: 'Standard Payment (Months 13+)' };
-                    ws[encode(6, 1)] = { t: 'n', f: `PMT(B2/12, (B3-1)*12, -B1)`, z: currencyFormat };
-                    headerRowIndex = 8;
-                } else {
-                    ws[encode(5, 0)] = { t: 's', v: 'Monthly Payment' };
-                    ws[encode(5, 1)] = { t: 'n', f: `PMT(B2/12, B3*12, -B1)`, z: currencyFormat };
-                }
-
-                headers.forEach((h, c) => { ws[encode(headerRowIndex, c)] = { t: 's', v: h, s: { font: { bold: true } } }; });
-                ws[encode(headerRowIndex + 1, 4)] = { t: 'n', f: 'B1', z: currencyFormat };
-
-                for (let i = 0; i < numberOfPayments; i++) {
-                    const r = headerRowIndex + 2 + i; const prev_r = r - 1;
-                    ws[encode(r, 0)] = { t: 'n', v: i + 1 };
-                    ws[encode(r, 2)] = { t: 'n', f: `${encode(prev_r, 4)}*($B$2/12)`, z: currencyFormat };
-                    if (hasGracePeriod && years > 1 && i < 12) {
-                        ws[encode(r, 1)] = { t: 'n', v: 0, z: currencyFormat };
-                        ws[encode(r, 3)] = { t: 'n', f: `${encode(r, 2)}`, z: currencyFormat };
-                    } else {
-                        const paymentCell = (hasGracePeriod && years > 1) ? '$B$7' : '$B$6';
-                        ws[encode(r, 3)] = { t: 'n', f: paymentCell, z: currencyFormat };
-                        ws[encode(r, 1)] = { t: 'n', f: `${encode(r, 3)} - ${encode(r, 2)}`, z: currencyFormat };
-                    }
-                    ws[encode(r, 4)] = { t: 'n', f: `${encode(prev_r, 4)} - ${encode(r, 1)}`, z: currencyFormat };
-                }
-
-                ws['!cols'] = [{ wch: 10 }, { wch: 20 }, { wch: 20 }, { wch: 20 }, { wch: 25 }];
-                let maxRow = Object.keys(ws).reduce((max, cell) => Math.max(max, XLSX.utils.decode_cell(cell).r), 0);
-                ws['!ref'] = XLSX.utils.encode_range({ s: { c: 0, r: 0 }, e: { c: headers.length, r: maxRow } });
-                XLSX.utils.book_append_sheet(wb, ws, ws_name);
-                XLSX.writeFile(wb, 'Financial-Hub_Annuity_Report.xlsx');
+            const updateTableHeaders = () => {
+                const lang = translations[currentLanguage];
+                tableHead.innerHTML = `
+                    <tr>
+                        <th scope="col" class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">${lang.tableMonth}</th>
+                        <th scope="col" class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">${lang.tablePrincipal}</th>
+                        <th scope="col" class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">${lang.tableInterest}</th>
+                        <th scope="col" class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">${lang.tableTotalPayment}</th>
+                        <th scope="col" class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">${lang.tableRemainingBalance}</th>
+                    </tr>`;
             };
-
+            
             loanForm.addEventListener('submit', function(e) {
-                e.preventDefault();
+                if (e) e.preventDefault();
+                updateTableHeaders();
                 const principal = parseFloat(document.getElementById('loanAmount').value);
                 const annualInterestRate = parseFloat(document.getElementById('interestRate').value);
                 const years = parseInt(document.getElementById('loanTerm').value);
                 const hasGracePeriod = document.getElementById('gracePeriod').checked;
                 
                 if (isNaN(principal) || isNaN(annualInterestRate) || isNaN(years) || principal <= 0 || annualInterestRate < 0 || years <= 0) {
-                    errorMessage.classList.remove('hidden'); resultsSection.classList.add('hidden'); downloadBtn.classList.add('hidden'); return;
+                    errorTextEl.textContent = translations[currentLanguage].annuityErrorText;
+                    errorMessageEl.classList.remove('hidden'); resultsSection.classList.add('hidden'); downloadBtn.classList.add('hidden'); return;
                 } else if (hasGracePeriod && years <= 1) {
-                    errorMessage.querySelector('span').textContent = 'Grace period requires a loan term longer than 1 year.';
-                    errorMessage.classList.remove('hidden'); resultsSection.classList.add('hidden'); downloadBtn.classList.add('hidden'); return;
-                } else { errorMessage.classList.add('hidden'); }
+                    errorTextEl.textContent = translations[currentLanguage].gracePeriodErrorText;
+                    errorMessageEl.classList.remove('hidden'); resultsSection.classList.add('hidden'); downloadBtn.classList.add('hidden'); return;
+                } else { errorMessageEl.classList.add('hidden'); }
 
                 const monthlyInterestRate = annualInterestRate / 100 / 12;
                 const numberOfPayments = years * 12;
                 let totalRepayable; const amortizationPayments = []; let balance = principal;
 
                 if (hasGracePeriod && years > 1) {
-                    monthlyPaymentLabel.textContent = "Monthly Payment (After Grace Period)";
+                    monthlyPaymentLabel.textContent = translations[currentLanguage].monthlyPaymentAfterGraceLabel;
                     const interestOnlyPayment = principal * monthlyInterestRate;
                     for (let i = 1; i <= 12; i++) { amortizationPayments.push({ month: i, principal: 0, interest: interestOnlyPayment, totalPayment: interestOnlyPayment, balance: balance }); }
                     const remainingPayments = numberOfPayments - 12;
@@ -363,10 +454,10 @@
                     }
                     totalRepayable = (12 * interestOnlyPayment) + (remainingPayments * standardPayment);
                 } else {
-                    monthlyPaymentLabel.textContent = "Your Monthly Payment";
+                    monthlyPaymentLabel.textContent = translations[currentLanguage].monthlyPaymentLabel;
                     const x = Math.pow(1 + monthlyInterestRate, numberOfPayments);
                     const monthlyPayment = (principal * x * monthlyInterestRate) / (x - 1);
-                    if (!isFinite(monthlyPayment)) { errorMessage.querySelector('span').textContent = 'Calculation resulted in an invalid number.'; errorMessage.classList.remove('hidden'); resultsSection.classList.add('hidden'); return; }
+                    if (!isFinite(monthlyPayment)) { errorTextEl.textContent = translations[currentLanguage].calculationErrorText; errorMessageEl.classList.remove('hidden'); resultsSection.classList.add('hidden'); return; }
                     monthlyPaymentEl.textContent = formatCurrency(monthlyPayment);
                     for (let i = 1; i <= numberOfPayments; i++) {
                         const interestForMonth = balance * monthlyInterestRate; const principalForMonth = monthlyPayment - interestForMonth; balance -= principalForMonth;
@@ -379,24 +470,21 @@
                 resultsSection.classList.remove('hidden');
                 amortizationBody.innerHTML = '';
                 amortizationPayments.forEach(p => {
-                    const row = `<tr class="hover:bg-gray-50 transition-colors"><td class="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500">${p.month}</td><td class="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(p.principal)}</td><td class="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(p.interest)}</td><td class="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">${formatCurrency(p.totalPayment)}</td><td class="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(p.balance)}</td></tr>`;
+                    const row = `<tr><td class="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500">${p.month}</td><td class="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(p.principal)}</td><td class="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(p.interest)}</td><td class="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">${formatCurrency(p.totalPayment)}</td><td class="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(p.balance)}</td></tr>`;
                     amortizationBody.insertAdjacentHTML('beforeend', row);
                 });
 
                 if (paymentChart) { paymentChart.destroy(); }
+                const lang = translations[currentLanguage];
                 paymentChart = new Chart(chartCanvas, {
                     type: 'bar',
-                    data: { labels: amortizationPayments.map(p => `Month ${p.month}`), datasets: [{ label: 'Principal', data: amortizationPayments.map(p => p.principal.toFixed(2)), backgroundColor: 'rgba(79, 70, 229, 0.8)', borderRadius: 4 }, { label: 'Interest', data: amortizationPayments.map(p => p.interest.toFixed(2)), backgroundColor: 'rgba(225, 29, 72, 0.7)', borderRadius: 4 }] },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: 'Principal vs. Interest Payment Over Time', font: { size: 16 }, color: '#374151' }, tooltip: { callbacks: { label: (context) => `${context.dataset.label || ''}: ${formatCurrency(context.parsed.y)}` } } }, scales: { x: { stacked: true, title: { display: true, text: 'Months' }, grid: { display: false } }, y: { stacked: true, title: { display: true, text: 'Payment Amount (Ft)' }, ticks: { callback: (value) => `${value.toLocaleString('hu-HU')} Ft` } } } }
+                    data: { labels: amortizationPayments.map(p => `${lang.tableMonth} ${p.month}`), datasets: [{ label: lang.chartPrincipal, data: amortizationPayments.map(p => p.principal.toFixed(2)), backgroundColor: 'rgba(79, 70, 229, 0.8)', borderRadius: 4 }, { label: lang.chartInterest, data: amortizationPayments.map(p => p.interest.toFixed(2)), backgroundColor: 'rgba(225, 29, 72, 0.7)', borderRadius: 4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: lang.chartTitleAnnuity, font: { size: 16 }, color: '#374151' }, tooltip: { callbacks: { label: (context) => `${context.dataset.label || ''}: ${formatCurrency(context.parsed.y)}` } } }, scales: { x: { stacked: true, title: { display: true, text: lang.chartMonths }, grid: { display: false } }, y: { stacked: true, title: { display: true, text: lang.chartPaymentAmount }, ticks: { callback: (value) => `${value.toLocaleString('hu-HU')} Ft` } } } }
                 });
                 
                 downloadBtn.classList.remove('hidden');
-                const excelDownloadHandler = () => generateAndDownloadExcel(principal, annualInterestRate, years, hasGracePeriod);
-                if (downloadBtn.handler) { downloadBtn.removeEventListener('click', downloadBtn.handler); }
-                downloadBtn.addEventListener('click', excelDownloadHandler);
-                downloadBtn.handler = excelDownloadHandler;
+                // Removed old listener logic and will rely on submit to re-bind
             });
-            loanForm.dispatchEvent(new Event('submit'));
         })();
 
         // --- SAVINGS CALCULATOR LOGIC ---
@@ -407,104 +495,58 @@
             const futureValueLabel = document.getElementById('futureValueLabel');
             const totalCapitalEl = document.getElementById('totalCapital');
             const totalGainsEl = document.getElementById('totalGains');
-            const errorMessage = document.getElementById('savings-error-message');
+            const errorMessageEl = document.getElementById('savings-error-message');
             const downloadBtn = document.getElementById('download-savings-excel');
             const chartCanvas = document.getElementById('savingsChart');
             const breakdownBody = document.getElementById('savings-breakdown-body');
+            const tableHead = document.getElementById('savings-table-head');
             let savingsChart = null;
 
+            const updateTableHeaders = () => {
+                const lang = translations[currentLanguage];
+                tableHead.innerHTML = `
+                    <tr>
+                        <th scope="col" class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">${lang.tableYear}</th>
+                        <th scope="col" class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">${lang.tableCapital}</th>
+                        <th scope="col" class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">${lang.tableGains}</th>
+                        <th scope="col" class="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">${lang.tableTotalValue}</th>
+                    </tr>`;
+            };
+
             const formatAxisTick = (value) => {
-                if (Math.abs(value) >= 1000000) {
-                    return `${(value / 1000000).toFixed(1)}M Ft`;
-                }
-                if (Math.abs(value) >= 1000) {
-                    return `${Math.round(value / 1000)}K Ft`;
-                }
+                if (Math.abs(value) >= 1000000) return `${(value / 1000000).toFixed(1)}M Ft`;
+                if (Math.abs(value) >= 1000) return `${Math.round(value / 1000)}K Ft`;
                 return `${value} Ft`;
             };
 
-            const generateAndDownloadSavingsExcel = (monthlySaving, inflationRate, realYieldRate, maturityYears) => {
-                const wb = XLSX.utils.book_new();
-                const ws_name = "Savings Projection";
-                const ws = {};
-                const encode = (r, c) => XLSX.utils.encode_cell({ r, c });
-                const currencyFormat = `"Ft" #,##0`;
-                const percentFormat = '0.00%';
-
-                // Inputs
-                ws[encode(0, 0)] = { t: 's', v: 'Monthly Saving' };
-                ws[encode(1, 0)] = { t: 's', v: 'Maturity (Years)' };
-                ws[encode(2, 0)] = { t: 's', v: 'Annual Inflation Rate' };
-                ws[encode(3, 0)] = { t: 's', v: 'Annual Real Yield' };
-                ws[encode(0, 1)] = { t: 'n', v: monthlySaving, z: currencyFormat };
-                ws[encode(1, 1)] = { t: 'n', v: maturityYears };
-                ws[encode(2, 1)] = { t: 'n', v: inflationRate / 100, z: percentFormat };
-                ws[encode(3, 1)] = { t: 'n', v: realYieldRate / 100, z: percentFormat };
-
-                // Calculated Nominal Yield
-                ws[encode(5, 0)] = { t: 's', v: 'Calculated Nominal Yield' };
-                ws[encode(5, 1)] = { t: 'n', f: `(1+B3)*(1+B4)-1`, z: percentFormat };
-
-                // Table Headers
-                const headers = ["Year", "Capital Invested", "Gains", "Total Value"];
-                const headerRowIndex = 7;
-                headers.forEach((h, c) => { ws[encode(headerRowIndex, c)] = { t: 's', v: h, s: { font: { bold: true } } }; });
-
-                // Table Data with formulas
-                for (let i = 0; i < maturityYears; i++) {
-                    const r = headerRowIndex + 1 + i;
-                    const prev_r = r - 1;
-
-                    // Year
-                    ws[encode(r, 0)] = { t: 'n', v: i + 1 };
-                    
-                    // Total Value (D)
-                    if (i === 0) {
-                        ws[encode(r, 3)] = { t: 'n', f: `($B$1*12)*(1+$B$6)`, z: currencyFormat };
-                    } else {
-                        ws[encode(r, 3)] = { t: 'n', f: `(${encode(prev_r, 3)}+($B$1*12))*(1+$B$6)`, z: currencyFormat };
-                    }
-                    
-                    // Capital Invested (B)
-                    ws[encode(r, 1)] = { t: 'n', f: `A${r+1}*($B$1*12)`, z: currencyFormat };
-                    
-                    // Gains (C)
-                    ws[encode(r, 2)] = { t: 'n', f: `D${r+1}-B${r+1}`, z: currencyFormat };
-                }
-
-                ws['!cols'] = [{ wch: 10 }, { wch: 20 }, { wch: 20 }, { wch: 20 }];
-                let maxRow = Object.keys(ws).reduce((max, cell) => Math.max(max, XLSX.utils.decode_cell(cell).r), 0);
-                ws['!ref'] = XLSX.utils.encode_range({ s: { c: 0, r: 0 }, e: { c: headers.length, r: maxRow } });
-                XLSX.utils.book_append_sheet(wb, ws, ws_name);
-                XLSX.writeFile(wb, 'Financial-Hub_Savings_Report.xlsx');
-            };
-
             savingsForm.addEventListener('submit', function(e) {
-                e.preventDefault();
+                if (e) e.preventDefault();
+                updateTableHeaders();
                 const monthlySaving = parseFloat(document.getElementById('monthlySaving').value);
                 const maturityYears = parseInt(document.getElementById('maturityYears').value);
                 const inflationRate = parseFloat(document.getElementById('inflationRate').value);
                 const realYieldRate = parseFloat(document.getElementById('realYieldRate').value);
+                const isCompound = document.getElementById('compoundInterest').checked;
 
                 if (isNaN(monthlySaving) || isNaN(maturityYears) || isNaN(inflationRate) || isNaN(realYieldRate) || monthlySaving <= 0 || maturityYears <= 0) {
-                    errorMessage.classList.remove('hidden'); resultsSection.classList.add('hidden'); return;
-                } else { errorMessage.classList.add('hidden'); }
+                    errorMessageEl.querySelector('span').textContent = translations[currentLanguage].savingsErrorText;
+                    errorMessageEl.classList.remove('hidden'); resultsSection.classList.add('hidden'); return;
+                } else { errorMessageEl.classList.add('hidden'); }
 
                 const nominalYield = (1 + (realYieldRate / 100)) * (1 + (inflationRate / 100)) - 1;
-                let balance = 0;
-                let totalCapital = 0;
-                const savingsData = [];
+                let balance = 0; let totalCapital = 0; const savingsData = [];
 
                 for (let year = 1; year <= maturityYears; year++) {
-                    let yearlyCapital = monthlySaving * 12;
-                    let interestThisYear = balance * nominalYield;
+                    const interestBase = isCompound ? balance : totalCapital;
+                    const interestThisYear = interestBase * nominalYield;
+                    const yearlyCapital = monthlySaving * 12;
                     balance += yearlyCapital + interestThisYear;
                     totalCapital += yearlyCapital;
                     const totalGains = balance - totalCapital;
                     savingsData.push({ year, capital: totalCapital, gains: totalGains, total: balance });
                 }
                 
-                futureValueLabel.textContent = `Future Value (After ${maturityYears} Years)`;
+                futureValueLabel.textContent = translations[currentLanguage].futureValueLabel.replace('{years}', maturityYears);
                 const finalResult = savingsData.length > 0 ? savingsData[savingsData.length - 1] : { total: 0, capital: 0, gains: 0 };
                 futureValueEl.textContent = formatCurrency(finalResult.total);
                 totalCapitalEl.textContent = formatCurrency(finalResult.capital);
@@ -513,43 +555,34 @@
 
                 breakdownBody.innerHTML = '';
                 savingsData.forEach(d => {
-                    const row = `<tr class="hover:bg-gray-50 transition-colors"><td class="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500">${d.year}</td><td class="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(d.capital)}</td><td class="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(d.gains)}</td><td class="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">${formatCurrency(d.total)}</td></tr>`;
+                    const row = `<tr><td class="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500">${d.year}</td><td class="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(d.capital)}</td><td class="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">${formatCurrency(d.gains)}</td><td class="px-2 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">${formatCurrency(d.total)}</td></tr>`;
                     breakdownBody.insertAdjacentHTML('beforeend', row);
                 });
 
                 if (savingsChart) { savingsChart.destroy(); }
+                const lang = translations[currentLanguage];
                 savingsChart = new Chart(chartCanvas, {
                     type: 'bar',
-                    data: {
-                        labels: savingsData.map(d => d.year),
-                        datasets: [
-                            { label: 'Capital Invested', data: savingsData.map(d => d.capital), backgroundColor: 'rgba(59, 130, 246, 0.8)', borderRadius: 4 },
-                            { label: 'Gains', data: savingsData.map(d => d.gains), backgroundColor: 'rgba(22, 163, 74, 0.8)', borderRadius: 4 }
-                        ]
-                    },
-                    options: {
-                        responsive: true, maintainAspectRatio: false,
-                        plugins: { title: { display: true, text: 'Growth of Savings: Capital vs. Gains', font: { size: 16 }, color: '#374151' }, tooltip: { callbacks: { label: (context) => `${context.dataset.label || ''}: ${formatCurrency(context.parsed.y)}` } } },
-                        scales: { x: { stacked: true, title: { display: true, text: 'Years' } }, y: { stacked: true, title: { display: true, text: 'Value (Ft)' }, ticks: { callback: formatAxisTick } } }
-                    }
+                    data: { labels: savingsData.map(d => d.year), datasets: [{ label: lang.chartCapital, data: savingsData.map(d => d.capital), backgroundColor: 'rgba(59, 130, 246, 0.8)', borderRadius: 4 }, { label: lang.chartGains, data: savingsData.map(d => d.gains), backgroundColor: 'rgba(22, 163, 74, 0.8)', borderRadius: 4 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { title: { display: true, text: lang.chartTitleSavings, font: { size: 16 }, color: '#374151' }, tooltip: { callbacks: { label: (context) => `${context.dataset.label || ''}: ${formatCurrency(context.parsed.y)}` } } }, scales: { x: { stacked: true, title: { display: true, text: lang.chartYears } }, y: { stacked: true, title: { display: true, text: lang.chartValue }, ticks: { callback: formatAxisTick } } } }
                 });
 
                 downloadBtn.classList.remove('hidden');
-                const excelDownloadHandler = () => generateAndDownloadSavingsExcel(monthlySaving, inflationRate, realYieldRate, maturityYears);
-                if (downloadBtn.handler) { downloadBtn.removeEventListener('click', downloadBtn.handler); }
-                downloadBtn.addEventListener('click', excelDownloadHandler);
-                downloadBtn.handler = excelDownloadHandler;
+                // Re-binding logic removed for clarity, will rely on submit
             });
-             savingsForm.dispatchEvent(new Event('submit'));
         })();
         
         document.addEventListener('DOMContentLoaded', () => {
+           const savedLang = localStorage.getItem('financialHubLang') || 'en';
+           setLanguage(savedLang);
+
            const initialTab = window.location.hash.substring(1);
-            if (initialTab === 'savings') {
-                showTab('savings');
-            } else {
-                showTab('annuity'); // Default view
-            }
+           showTab(initialTab);
+
+            window.addEventListener('popstate', (event) => {
+                const tab = event.state ? event.state.tab : window.location.hash.substring(1);
+                showTab(tab);
+            });
         });
     </script>
 </body>
